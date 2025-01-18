@@ -1,0 +1,66 @@
+\chapter{Reflection}
+
+\section{Reification / Reflection}
+
+Reification turns a program structure into data that can be reasoned
+or acted upon.
+
+Reflection turns data back into a program structure so that it can
+affect the computation.
+
+\section{Reflective Towers of Interpreters}
+
+Reflective towers of interpreters have a long history, starting with
+Brian Cantwell Smith's LISP-3, then brown, blond and black.
+
+Each level (including the user level) has a meta level. So each level
+can be reasoned about and acted upon.
+
+You can play with the Black reflective tower here:
+\url{http://io.livecode.ch/learn/readevalprintlove/black}
+
+\section{Metaobject Protocols}
+
+Metaobject protocols provide an object-oriented system with a
+landscape of design options rather than focusing on a single point in
+the design space.
+
+\section{Reflection vs. Abstraction}
+
+See examples in Java, where reflection breaks basic expectations: \url{https://github.com/namin/metaprogramming/tree/master/lectures/2-reflection-dangers}
+
+\section{Further Reading}
+
+\cite{Wand1998} gives meaning to FEXPR and shows that it precludes
+{\emph generally} admissible optimizations.
+
+Reflective towers of interpreters started with \cite{smith-lisp}, then continued with Brown~\citep{brown}, Blond~\citep{blond}, Black~\citep{black,black-gpce}, Pink \& Purple~\citep{collapsing-towers}.
+
+A Meta-Object Protocol (MOP~\citep{Kiczales93metaobjectprotocols}) opens
+up the design of the language to the user. \cite{bracha-mirrors}
+advocates a pluggable form of such reflection. \cite{oeom} shows how
+to design and bootstrap a small flexible object system in steps.
+
+Fun systems of interests because of their malleability and
+bootstrapping capabilities include \cite{fisher1970control}, which
+opens up all control structures up to defining parsing as a problem in
+control; Smalltalk, where the MOP in Smalltalk-72~\citep{smalltalk-72} was so flexible that
+some of its power was revoked later in Smalltalk-80~\citep{smalltalk-80}.
+Systems with
+syntax malleability include IMP~\citep{imp},
+Lisp-70~\citep{testerlisp70}
+and Meta~II~\citep{meta2}. Self-hosting systems to
+study include ichbins~\citep{ichbins} and Maru~\citep{maru}.
+
+\cite{sobel} give an early account of monadic reflection. A modern
+incarnation can be found in Meta-F*~\citep{meta-fstar}, where
+reflection as a principled effect enables sound mixing of proofs by
+tactics and by automatic discharge to an SMT solver. This approach is
+related to ``proof by reflection'', a common technique in proof
+assistants such as Coq~\citep{coq-reflection,coq-reflection2},
+Agda~\citep{agda-reflection,agda-stump,agda-reflection-eng} and HOL~\citep{hol-reflection}. \cite{harrison-reflection} surveys proof by reflection, and favors the LCF approach even for proving in the large.
+
+\cite{malenfant} surveys reflection in logic, functional and object-oriented programming. \cite{tanter} reviews reflection for open implementation.
+
+\cite{metaconnaissances} (in French) argues for reflection, or change
+of abstraction level, to solve problems.

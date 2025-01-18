@@ -1,0 +1,113 @@
+\chapter{Compilation}
+
+\section{Partial Evaluation}
+
+Partial evaluation optimizes a program by specializing to some known
+arguments. The known arguments are static, while unknown arguments are
+dynamic. Binding-Time Analysis (BTA) decides whether an expression in
+the program is static or dynamic by propagation. BTA can be done
+offline (in advance) or online (while specializing)
+
+\subsection{Futamura projections}
+
+Notation from \cite{selfpe}.
+
+\noindent
+Let $L$ be a meta function from a program to the function it computes. Let $S$ and $T$ be programming languages.
+
+\noindent
+Equation for partial evaluator mix:
+$$(P)\ L\ p\ [d_1, d_2] = L\ (L \text{ mix } [p, d_1])\ d_2$$
+
+\noindent
+Equation for an $S$-interpreter int written in $L$:
+$$(I)\ S \text{ pgm } \text{data } = L \text{ int } [\text{pgm}, \text{ data}]$$
+
+\noindent
+Equation for an $S$-to-$T$-compiler comp written in $L$:
+$$(C)\ S \text{ pgm } \text{ data } = T\ (L \text{ comp } \text{pgm}) \text{ data}$$
+
+\noindent
+Futamura projections:
+$$(1)\ L \text{ mix } [\text{int}, \text{ pgm}] = \textbf{ target}$$
+$$(2)\ L \text{ mix } [\text{mix}, \text{ int}] = \textbf{ compiler}$$
+$$(3)\ L \text{ mix } [\text{mix}, \text{ mix}] = \textbf{ compiler generator}$$
+
+The equations are easily verified using the equations for mix $(P$), and for
+interpreters $(I)$ and compilers $(C)$ above.
+
+\ \\
+
+\noindent
+Verify $(1)$:
+$$S \text{ pgm } \text{data } = L \text{ int } [\text{pgm}, \text{ data}] \textit{ by } (I)$$
+$$L \text{ int } [\text{pgm}, \text{ data}] = L (L \text{ mix } [\text{int}, \text{pgm}]) \text{ data} \textit{ by } (P)$$
+\begin{center}Therefore, $(L \text{ mix } [\text{int}, \text{ pgm}])$ acts as {\bf target}.\end{center}
+
+\ \\
+
+\noindent
+Verify $(2)$:
+$$L \text{ mix } [\text{int}, \text{ pgm}] = \textbf{ target } \textit{ by } (1)$$
+$$L \text{ mix } [\text{int}, \text{pgm}] = L (L \text{ mix } [\text{mix}, \text{ int}]) \text{ pgm } \textit{ by } (P)$$
+\begin{center}Therefore, $(L \text{ mix } [\text{mix}, \text{ int}])$ acts as a {\bf compiler}.\end{center}
+
+\ \\
+
+\noindent
+Verify $(3)$:
+$$L \text{ mix } [\text{mix}, \text{ int}] = \textbf{ compiler } \textit{by } (2)$$
+$$L \text{ mix } [\text{mix}, \text{int}] = L (L \text{ mix } [\text{mix}, \text{ mix}]) \text{ int } \textit{by } (P)$$
+\begin{center}Therefore, $(L \text{ mix } [\text{mix}, \text{ mix}])$ acts as a {\bf compiler generator}.\end{center}
+
+\section{Multi-Stage Programming}
+
+Multi-stage programming explicitly separates a program, turned into a
+program generator, into stages -- ``now'' / static / code generator
+stage vs ``later'' / dynamic / generated code stage. This distinction
+can be done syntactically, as in MetaOcaml, or driven by types, as in
+LMS. In contrast to partial evaluation, the binding times are thus
+explicit and manual.
+
+See \url{https://scala-lms.github.io/tutorials/index.html} for an introduction to LMS.
+
+\section{Turning Interpreters into Compilers}
+
+An interpreter can be mechanically turned into a (naive) compiler
+using staging by making the program static and only the input to the
+program dynamic.
+
+For example, a staged regular expression matcher makes the regular
+expression static and the matched string dynamic, generating code
+specialized to one regular expression. See
+\url{https://github.com/namin/metaprogramming/tree/master/lectures/3-regexp}
+as a starting point in LMS-verify~\citep{lms-verify}.
+
+\section{Collapsing Towers of Interpreters}
+
+Collapsing towers of interpreters can be achieved through stage
+polymorphism~\citep{collapsing-towers}.
+
+The more dynamic approach relies on a stage-polymorphic VM, where
+operations are lifted or not by dynamic dispatched,
+based on the dynamic types of the arguments.
+See \url{http://popl18.namin.net}.
+
+The more static approach relies on stage polymorphism driven by types
+and optimizations in LMS. Any code, even generated code, can be
+instantiated for interpretation or compilation. See
+\url{https://github.com/namin/lms-black}.
+
+\section{Further Reading}
+
+The book by \cite{pebook} is the bible of Partial Evaluation. The
+Futamura projections were first introduced by
+\cite{Futamura:1971,Futamura:1999}. The tutorial by \cite{petut} is a
+good starting point, building a small partial evaluator in Haskell.
+
+The SQL to C compiler by \cite{query-pearl} is good starting point for
+learning about Lightweight Modular Staging (LMS~\citep{lms}) and using staging to
+turn an interpreter into a compiler.
+
+\cite{oleg-tutorial} teaches modular multi-stage programming with
+MetaOCaml.

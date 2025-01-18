@@ -1,0 +1,130 @@
+\chapter{Introduction}
+
+\section{Metaprogramming}
+
+%TODO: have quotes?
+
+Metaprogramming is writing programs that manipulate programs, as
+data or processes. For example,
+\begin{itemize}
+\item an interpreter takes a program as input data and then turns this
+  description into a process;
+\item a compiler takes a program as input data and then produces an
+  equivalent program as output data -- translating the description
+  from one language to another.
+\end{itemize}
+
+Metaprogramming is an art, even just to keep all the levels straight.
+This course gives some recipes for a more principled approach to
+meta-programming, from art to science.
+
+Why is metaprogramming relevant?
+
+\begin{enumerate}
+\item Meta-computation is at the heart of computation, theoretically
+and practically even in the possibility of a universal machine and the
+realization of a computer.
+
+\item A useful way of programming is starting with a domain, and
+building a little language to express a problem and a solution in that
+domain. Metaprogramming gives the tooling.
+
+\item Thinking principally about metaprogramming will give you new
+approaches to programming. For example,
+you will have a recipe to mechanically turn an interpreter into a
+compiler. You will acquire new principles, new shortcuts or lenses or
+tools for thought and implementation if you will.
+
+\end{enumerate}
+
+Beyond traditional meta-programs such as interpreters and compilers,
+metaprogramming taken more broadly
+encompasses programming programming, and manipulating processes that
+manipulate processes. Reflection comes into play. Also, control -- for
+example, a high-level logic search strategy controlling a low-level
+SMT solver is a form of metaprogramming.
+Ultimately, we want to abstract over abstractions. Metaprogramming
+gives us a way of thinking about higher-order abstractions and
+meta-linguistic abstractions.
+
+In this course, we will cover techniques around interpretation,
+reflection, compilation, embedding, synthesis, and exploration.
+
+\section{Scala, Quickly}
+
+Scala has implicit conversions. They enable promoting one type to
+another, and also enable the ``pimp your library'' pattern.
+\begin{lstlisting}[language=Scala]
+case class Complex(r: Int, i: Int) { ... }
+implicit def fromInt(r: Int) = Complex(r, 0)
+\end{lstlisting}
+
+Scala has implicit parameters. They support type classes as well as
+automatically providing information based on context.
+\begin{lstlisting}[language=Scala]
+// type classes, e.g. Numeric[T], Ordering[T]
+def foo[T:Numeric](x: T) = {
+  val num = implicitly[Numeric[T]]
+  num.plus(x, x)
+}
+// equivalently:
+def foo2[T](x: T)(implicit num: Numeric[T]) {
+  num.plus(x,x)
+}
+// for example, we could define Numeric[Complex]
+implicit def numComplex: Numeric[Complex] = ...
+\end{lstlisting}
+
+Scala has case classes. They make it easy to define algebraic data types (ADTs).
+Here are ADTs for the lambda calculus, and an interpreter from {\tt Term}s to {\tt Val}ues.
+We can use trait mixin composition to share the {\tt Const} nodes between {\tt Term}s and {\tt Val}ues.
+We use {\tt sealed} classes to get help with exhaustive pattern matching.
+The {\tt @} syntax enables us to precisely name part of the pattern match.
+Here, it is useful because we've been using precise types (not just the ADT union type) in some parts (for example, a closure contains a lambda).
+\begin{lstlisting}[language=Scala]
+sealed abstract trait Term
+sealed abstract trait Val
+case class Var(x: String) extends Term
+case class Lam(p: Var, b: Term) extends Term
+case class App(a: Term, b: Term) extends Term
+
+type Env = Map[Var,Val]
+case class Clo(l: Lam, m: Env) extends Val
+case class Const(n: Int) extends Term with Val
+
+def ev(e: Term, m: Env): Val = e match {
+  case v@Var(x) => m(v)
+  case c@Const(n) => c
+  case l@Lam(p, b) => Clo(l, m)
+  case App(a, b) => ev(a, m) match {
+    case Clo(Lam(param, body), clo_env) =>
+      val arg = ev(b, m)
+      ev(body, clo_env + (param -> arg))
+  }
+}
+\end{lstlisting}
+
+A case class provides a few helpers in the companion object. Here is
+how the desugaring works.
+\begin{lstlisting}[language=Scala]
+case class Foo(a: Int)
+// produces companion object
+object Foo {
+  def apply(a: Int): Foo = Foo(a)
+  def unapply(x: Foo): Some[Int] = Some(x.a)
+}
+\end{lstlisting}
+
+For more, see \url{https://github.com/namin/metaprogramming/blob/master/lectures/0-scala-intro/intro_done.scala}
+
+\section{Further Reading}
+
+We will be using the Scala programming language for assignments. There
+are many books that could be useful but none are required. I recommend
+\cite{scala-by-example} as well as the book by
+\cite{scala-book-by-odersky}.
+
+TAPL~\citep{tapl}, SICP~\citep{sicp}, PAIP~\citep{paip}, Art of Prolog~\citep{art-prolog},
+Building Problem Solvers~\citep{bps}, Test Driven Development by
+Example~\citep{tdd}, Expert F\#~\citep{expertfsharp}, Valentino
+Braitenberg's Vehicles~\citep{braitenberg1986vehicles}, the Reasoned Schemer~\citep{mk2005,mk} --- these are a few of my favorite books.

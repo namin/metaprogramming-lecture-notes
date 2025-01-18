@@ -1,0 +1,73 @@
+\documentclass{book}
+
+%\usepackage{code}
+\usepackage{adjustbox}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{booktabs}
+\usepackage{bussproofs}
+\usepackage[T1]{fontenc}
+\usepackage{luximono}
+\usepackage{framed}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{ifluatex}
+\usepackage{ifxetex}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{natbib}
+\usepackage{pifont}
+\usepackage{rotating}
+\usepackage{qtree}
+\usepackage{ulem}
+%\usepackage{unicode-math}
+%\usepackage{inconsolata}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds,patterns,shapes.misc}
+\usepackage{wrapfig}
+\usepackage[all]{xy}
+\usepackage{xcolor}
+\usepackage{textcomp}
+
+\begin{document}
+
+%\input{definitions.tex}
+\setcounter{chapter}{-1}
+
+\title{Metaprogramming Lecture Notes}
+\author{Nada Amin (na482)}
+\date{October 2018}
+\maketitle
+
+\tableofcontents
+\include{0-introduction}
+\include{1-interpretation}
+\include{2-reflection}
+\include{3-compilation}
+\include{4-dsl}
+\include{5-synthesis}
+\include{6-explore}
+\nocite{sicp}
+
+\chapter*{Acknowledgment}
+
+I thank Oliver Bra\c{c}evac, William E. Byrd, Mistral Contrastin,
+Samuel Gruetter, Alan Kay, Oleg Kiselyov, Fengyun Liu,
+Fran\c{c}ois-Ren\'e Rideau, Tiark Rompf, Sandro Stucki, Alessandro
+Warth, Jeremy Yallop and the participants of the IFIP Working Groups
+on Language Design and on Functional Programming for many insightful
+discussions and pointers.
+
+\clearpage
+%\setcounter{page}{1}
+\bibliographystyle{unsrtnat}
+\bibliography{meta}
+
+\end{document}

@@ -1,0 +1,65 @@
+\chapter{Interpretation}
+
+\section{Programs as Data / Data as Programs}
+
+\subsection{Programs as Data}
+
+We can encode data in terms of the lambda-calculus. For example, we
+can define our own notion of pair constructor {\tt cons} and
+destructors {\tt car} and {\tt cdr}.
+
+\begin{lstlisting}[language=Scheme]
+;(car (cons A B)) == A
+;(cdr (cons A B)) == B
+
+(define my-cons
+  (lambda (a b)
+    (lambda (msg)
+      (if (eq? msg 'car) a b))))
+
+(define my-car
+  (lambda (p)
+  (p 'car)))
+
+(define my-cdr
+  (lambda (p)
+    (p 'cdr)))
+\end{lstlisting}
+
+\subsection{Data as Programs}
+
+Interpreters reflect data as programs,
+while quoting mechanisms reify programs as data.
+
+\section{Interpreters}
+
+\section{Meta-Circularity}
+
+\subsection{Meta-Interpreters in Lisp}
+
+See \url{https://github.com/namin/metaprogramming/tree/master/lectures/1-lisp}
+
+\subsection{Meta-Interpreters in Prolog}
+
+See \url{https://github.com/namin/metaprogramming/tree/master/lectures/1-prolog}
+
+\section{Further Reading}
+
+SICP~\citep{sicp}, PAIP~\citep{paip}, Art of Prolog~\citep{art-prolog}
+all have examples of interpreters.
+
+Seminal papers on definitional interpreters and meta-circularity are
+those of \cite{eval} and \cite{eval-reynolds}.
+
+\cite{lisp-history} gives a fun history of lisp.
+
+\cite{ferguson} gives a fun introduction to Prolog.
+
+\cite{oecm} shows how to bootstrap a flexible core interpreter in a
+simple and elegant serie of stepping stones.
+
+Interpretation can lead to abstract interpretation quite naturally~\citep{meta_circ_prolog,darais}.
+
+Meta-circularity poses punny questions of
+trust~\citep{trusting-trust}. Yet CakeML is a proven-correct compiler
+that can bootstrap itself~\citep{cakeml,cakeml-thesis}.
